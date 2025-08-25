@@ -10,7 +10,7 @@ function TodoItem({ task, editTask, deleteTask, toggleStatus }) {
         checked={task.status}
         onChange={() => toggleStatus(task.id, !task.status)}
       />
-      <p>{task.description}</p>
+      <p className={task.status ? "completed" : ""}>{task.description}</p>
       <button className="icon-button" onClick={() => editTask(task.id)}>
         <AiFillEdit style={{ color: "#5e5e5e", fontSize: "16px" }} />
       </button>

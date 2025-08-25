@@ -60,7 +60,7 @@ server.patch("/task/:id", (req, res) => {
     values.push(description);
   }
 
-  if (status) {
+  if (typeof status === "boolean") {
     updates.push("status = ?");
     values.push(status);
   }

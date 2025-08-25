@@ -49,8 +49,7 @@ function TodoList() {
     setTasks(tasks.filter((task) => task.id !== id));
   }
 
-  function toggleStatus(id, status) {
-    const newStatus = !status;
+  function toggleStatus(id, newStatus) {
     updateTask(id, { status: newStatus });
 
     setTasks(
