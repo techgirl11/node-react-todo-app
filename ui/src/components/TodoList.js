@@ -14,22 +14,33 @@ function TodoList() {
   }, []);
 
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("");
   const [editTaskId, setEditTaskId] = useState(null);
 
   function addTask(text) {
+    const trimmedText = text.trim();
+
+    if (trimmedText === "") {
+      alert("Task description cannot be empty.");
+
+      // remove edit task id to prevent accidental update
+      if (editTaskId !== null) {
+        setEditTaskId(null);
+      }
+      return;
+    }
+
     if (editTaskId !== null) {
       // Update mode
-      updateTask(editTaskId, { description: text });
+      updateTask(editTaskId, { description: trimmedText });
       setTasks(
         tasks.map((task) =>
-          task.id === editTaskId ? { ...task, description: text } : task
+          task.id === editTaskId ? { ...task, description: trimmedText } : task
         )
       );
       setEditTaskId(null); // exit edit mode
     } else {
       // Add mode
-      const newTask = { description: text };
+      const newTask = { description: trimmedText };
       createTask(newTask);
       setTasks([...tasks, newTask]);
     }
