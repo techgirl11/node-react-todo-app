@@ -15,35 +15,48 @@ function TodoList() {
 
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
+  const [editTaskId, setEditTaskId] = useState(null);
 
   function addTask(text) {
-    const newTask = {
-      description: text,
-    };
-    createTask(newTask);
-
-    setTasks([...tasks, newTask]);
+    if (editTaskId !== null) {
+      // Update mode
+      updateTask(editTaskId, { description: text });
+      setTasks(
+        tasks.map((task) =>
+          task.id === editTaskId ? { ...task, description: text } : task
+        )
+      );
+      setEditTaskId(null); // exit edit mode
+    } else {
+      // Add mode
+      const newTask = { description: text };
+      createTask(newTask);
+      setTasks([...tasks, newTask]);
+    }
     setDescription("");
   }
 
   function editTask(id) {
-    setTasks(tasks.filter((task) => task.id !== id));
+    const taskToEdit = tasks.find((task) => task.id === id);
+    if (taskToEdit) {
+      setDescription(taskToEdit.description); // populate input box
+      setEditTaskId(id); // set edit mode
+    }
   }
+
   function deleteTask(id) {
     removeTask(id);
     setTasks(tasks.filter((task) => task.id !== id));
   }
 
   function toggleStatus(id, status) {
-    updateTask(id, { status: status });
+    const newStatus = !status;
+    updateTask(id, { status: newStatus });
+
     setTasks(
-      tasks.map((task) => {
-        if (task.id === id) {
-          return { ...task, status: !task.status };
-        } else {
-          return task;
-        }
-      })
+      tasks.map((task) =>
+        task.id === id ? { ...task, status: newStatus } : task
+      )
     );
   }
   return (
