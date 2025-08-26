@@ -53,6 +53,17 @@ function TodoList() {
 
   function editTask(id) {
     const taskToEdit = tasks.find((task) => task.id === id);
+
+    if (taskToEdit.status) {
+      const confirmEdit = window.confirm(
+        "This task is already marked as completed. Do you want to edit it anyway?"
+      );
+
+      if (!confirmEdit) {
+        return;
+      }
+    }
+
     if (taskToEdit) {
       setDescription(taskToEdit.description); // populate input box
       setEditTaskId(id); // set edit mode
