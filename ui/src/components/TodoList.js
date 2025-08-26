@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import TodoItem from "./TodoItem";
 import { FaPlusCircle } from "react-icons/fa";
 import { getTaskList, createTask, updateTask, removeTask } from "./../handler";
@@ -16,7 +16,7 @@ function TodoList() {
   const [description, setDescription] = useState("");
   const [editTaskId, setEditTaskId] = useState(null);
 
-  function addTask(text) {
+  async function addTask(text) {
     const trimmedText = text.trim();
 
     if (trimmedText === "") {
@@ -40,9 +40,13 @@ function TodoList() {
       setEditTaskId(null); // exit edit mode
     } else {
       // Add mode
-      const newTask = { description: trimmedText };
-      createTask(newTask);
-      setTasks([...tasks, newTask]);
+      try {
+        const createdTask = await createTask({ description: trimmedText });
+        setTasks([...tasks, createdTask]);
+      } catch (error) {
+        console.error("Failed to create task:", error);
+        alert("Something went wrong while creating the task.");
+      }
     }
     setDescription("");
   }
