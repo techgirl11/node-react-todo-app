@@ -44,11 +44,20 @@ server.post("/task", (req, res) => {
 
     // Fetch the full task row from DB to return task object and not just the insertId
     // so that it displays the task row with description and status as soon as it is created
-    const [rows] = await db.query("SELECT * FROM tasks WHERE id = ?", [result.insertedId]);
+    const selectQuery = "SELECT id, description, status FROM tasks WHERE id = ?";
 
-    res
-      .status(201)
-      .json({ message: "Task added successfully", task: rows[0] });
+    connection.query(selectQuery, [result.insertId], (err, rows) => {
+      if (err) throw err;
+
+      if (rows.length === 0) {
+        return res.status(500).json({ message: "Task not found after insert" });
+      }
+
+      res.status(201).json({
+        message: "Task added successfully",
+        task: rows[0],
+      });
+    });
   });
 });
 

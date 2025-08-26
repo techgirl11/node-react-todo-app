@@ -24,7 +24,7 @@ export const createTask = async (data) => {
       },
     })
     .then((response) => {
-      return response.data;
+      return response.data.task;
     });
 };
 
